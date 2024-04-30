@@ -39,6 +39,8 @@ public class Compilador extends javax.swing.JFrame
         initComponents();
         inicializar();
         tabErrores.setVisible(false);
+        lblCerrar.setVisible(false);
+        lblSee.setVisible(false);
     }
     
     public void Mostrar()
@@ -48,13 +50,22 @@ public class Compilador extends javax.swing.JFrame
         jtaSintactico.append("\n");
     }
     
+    public void restartError()
+    {
+        error = "";
+        con = 0;
+        Errores.setText("");
+        tabErrores.setVisible(false);
+        lblCerrar.setVisible(false);
+        lblSee.setVisible(false);
+    }
+    
     public void restartPila()
     {
         pilaprin.clear();
         pilaaux.clear();
         pilaprin.push("$");
-        pilaprin.push("L");
-        con = 0;
+        pilaprin.push("L");               
     }
     
     public void Sintactico(String token, int linea) 
@@ -88,12 +99,12 @@ public class Compilador extends javax.swing.JFrame
                 if(acciones[estado][col].equals("saltar"))
                 {                    
                     if(estados[estado].equals("L") || estados[estado].equals("R") || estados[estado].equals("E") || estados[estado].equals("T") || estados[estado].equals("F")) {
-                        error += "Error sintáctico en la línea " + linea + ": esperaba un operando" + "\n";
                         con++;
+                        error += con + ". Error sintáctico en la línea " + linea + ": esperaba un operando" + "\n";                        
                     }
                     else if(estados[estado].equals("L'") || estados[estado].equals("R'") || estados[estado].equals("E'") || estados[estado].equals("T'")) {
-                        error += "Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n"; 
                         con++;
+                        error += con + ". Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n";                         
                     }
                     break;
                 }
@@ -136,18 +147,21 @@ public class Compilador extends javax.swing.JFrame
             while(ban) {
                 Tokens token = lexer.yylex();
                 if(token == null) {
-                    resLexico += "$"; //significa que ya se acabó el programa
+                    resLexico += "$";
                     jtaLexico.setText(resLexico);
                     Sintactico("$", (c.linea + 1));
-                    for(String elemento : pilaprin)
-                        jtaSintactico.append(elemento);
+                    if(!error.isEmpty()) {
+                        tabErrores.setVisible(true);
+                        lblCerrar.setVisible(true);
+                        Errores.setText("Hubo un total de " + con + " errores \n" + "\n" + error);
+                    }
                     ban = false;
                     return;
                 }
                 switch(token) {
                     case Error:
-                        error += "Error léxico en la línea " + (c.linea + 1) + " con el lexema " + lexer.lexeme + "\n";
                         con++;
+                        error += con + ". Error léxico en la línea " + (c.linea + 1) + " con el lexema " + lexer.lexeme + "\n";                        
                         break;
                     case program, idp, read, print, then, id, num, litcar, litcad:
                         resLexico += token + "\n";
@@ -171,6 +185,8 @@ public class Compilador extends javax.swing.JFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblSee = new javax.swing.JLabel();
+        lblCerrar = new javax.swing.JLabel();
         tabErrores = new javax.swing.JScrollPane();
         Errores = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -184,11 +200,37 @@ public class Compilador extends javax.swing.JFrame
         jtaLexico = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
         jtaSintactico = new javax.swing.JTextArea();
-        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 204, 204));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblSee.setBackground(new java.awt.Color(0, 0, 0));
+        lblSee.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        lblSee.setForeground(new java.awt.Color(255, 255, 255));
+        lblSee.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSee.setText("Ver Errores");
+        lblSee.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblSee.setOpaque(true);
+        lblSee.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblSeeMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lblSee, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 650, 140, -1));
+
+        lblCerrar.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        lblCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        lblCerrar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCerrar.setText("X");
+        lblCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCerrarMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lblCerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1301, 530, 30, -1));
 
         Errores.setBackground(new java.awt.Color(0, 0, 0));
         Errores.setColumns(20);
@@ -197,7 +239,7 @@ public class Compilador extends javax.swing.JFrame
         Errores.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ERRORES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI Light", 1, 18), new java.awt.Color(255, 255, 255))); // NOI18N
         tabErrores.setViewportView(Errores);
 
-        getContentPane().add(tabErrores, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, 700, 270));
+        getContentPane().add(tabErrores, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 1340, 170));
 
         jtpCode.setBackground(new java.awt.Color(0, 0, 0));
         jtpCode.setForeground(new java.awt.Color(255, 255, 255));
@@ -267,36 +309,50 @@ public class Compilador extends javax.swing.JFrame
 
         getContentPane().add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 300, 440, 380));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
-        jLabel3.setText("Analizador Sintáctico");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 270, -1, -1));
+        jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        jLabel4.setText("Analizador Sintáctico");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 270, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
         direc.Abrir(this);
+        restartError();
         clearAllComp();
     }//GEN-LAST:event_btnAbrirActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         direc.Nuevo(this);
+        restartError();
         clearAllComp();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         direc.Guardar(this);
+        restartError();
         clearAllComp();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
         restartPila();
+        restartError();
         direc.Guardar(this);
         clearAllComp();
         Lexico();
-        System.out.println("Hubo un total de " + con + " errores");
-        System.out.print(error);
     }//GEN-LAST:event_btnCompilarActionPerformed
+
+    private void lblCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCerrarMouseClicked
+        tabErrores.setVisible(false);
+        lblCerrar.setVisible(false);
+        lblSee.setVisible(true);
+    }//GEN-LAST:event_lblCerrarMouseClicked
+
+    private void lblSeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSeeMouseClicked
+        lblSee.setVisible(false);
+        tabErrores.setVisible(true);
+        lblCerrar.setVisible(true);        
+    }//GEN-LAST:event_lblSeeMouseClicked
 
     /**
      * @param args the command line arguments
@@ -358,13 +414,15 @@ public class Compilador extends javax.swing.JFrame
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jtaLexico;
     private javax.swing.JTextArea jtaSintactico;
     public javax.swing.JTextPane jtpCode;
+    private javax.swing.JLabel lblCerrar;
+    private javax.swing.JLabel lblSee;
     private javax.swing.JScrollPane tabErrores;
     // End of variables declaration//GEN-END:variables
 }
