@@ -60,6 +60,11 @@ int nu=0;
 <YYINITIAL> "==" {c.linea=yyline; lexeme=yytext();return equals_to;}
 <YYINITIAL> "<=" {c.linea=yyline; lexeme=yytext();return less_or_equals;}
 <YYINITIAL> ">=" {c.linea=yyline; lexeme=yytext();return greater_or_equals;}
+<YYINITIAL> "+=" {c.linea=yyline; lexeme=yytext();return plus_equals;}
+<YYINITIAL> "-=" {c.linea=yyline; lexeme=yytext();return minus_equals;}
+<YYINITIAL> "*=" {c.linea=yyline; lexeme=yytext();return mult_equals;}
+<YYINITIAL> "/=" {c.linea=yyline; lexeme=yytext();return div_equals;}
+<YYINITIAL> "%=" {c.linea=yyline; lexeme=yytext();return res_equals;}
 <YYINITIAL> "&&" {c.linea=yyline; lexeme=yytext();return logical_and;}
 <YYINITIAL> "||" {c.linea=yyline; lexeme=yytext();return logical_or;}
 <YYINITIAL> ";" {c.linea=yyline; lexeme=yytext();return semicolon;}

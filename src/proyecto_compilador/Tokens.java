@@ -23,7 +23,7 @@ public enum Tokens
     minus,
     mult,
     div,
-    res,
+    res,                    // %
     equal,                  // =
     less_than,              // <
     greater_than,           // >
@@ -32,6 +32,11 @@ public enum Tokens
     equals_to,              // ==
     less_or_equals,         // <=
     greater_or_equals,      // >=
+    plus_equals,            // +=
+    minus_equals,           // -=
+    mult_equals,            // *=
+    div_equals,             // /=
+    res_equals,             // %=
     logical_and,            // &&
     logical_or,             // ||
     semicolon,

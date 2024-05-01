@@ -20,18 +20,18 @@ public class Compilador extends javax.swing.JFrame
     
     Stack<String> pilaaux = new Stack<>();
     Stack<String> pilaprin = new Stack<>();
-    String tokens[] = {"id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "&&", "||", "!", "$"};
+    String tokens[] = {"id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
     String estados[] = {"L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
     String[][] acciones = {
-        {"R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "", ""},     //L'
-        {"E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "", "", "", ""},             //R'
-        {"T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", ""},       //E'
-        {"F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", ""},       //T'
-        {"id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
+        {"R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "", ""},     //L'
+        {"E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
+        {"T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
+        {"F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
+        {"id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
     };
 
     public Compilador() 
