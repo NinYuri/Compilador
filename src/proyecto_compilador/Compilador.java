@@ -20,27 +20,29 @@ public class Compilador extends javax.swing.JFrame
     
     Stack<String> pilaaux = new Stack<>();
     Stack<String> pilaprin = new Stack<>();
-    String tokens[] = {"id", "num", "(", ")", "+", "-", "*", "/", "%", "<", ">", "&&", "||", "!!", "!", "$"};
+    String tokens[] = {"id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "&&", "||", "!", "$"};
     String estados[] = {"L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
     String[][] acciones = {
-        {"R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
-        {"saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "!! R L'", "", ""},     //L'
-        {"E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
-        {"saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "", "", "", "", ""},             //R'
-        {"T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
-        {"saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", ""},       //E'
-        {"F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
-        {"saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", ""},       //T'
-        {"id", "num", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
+        {"R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "", ""},     //L'
+        {"E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "", "", "", ""},             //R'
+        {"T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", ""},       //E'
+        {"F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", ""},       //T'
+        {"id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
     };
 
     public Compilador() 
     {
         initComponents();
         inicializar();
+        setExtendedState(MAXIMIZED_BOTH);
+        setResizable(false);
         tabErrores.setVisible(false);
         lblCerrar.setVisible(false);
-        lblSee.setVisible(false);
+        lblSee.setVisible(false);               
     }
     
     public void Mostrar()
@@ -126,7 +128,7 @@ public class Compilador extends javax.swing.JFrame
     }
     
     public void Lexico()
-    {
+    {        
         boolean ban = true;
         Analisis c = new Analisis();
         File archivo = new File("Compilacion.yam"); // Representa el archivo Compilacion
@@ -154,6 +156,7 @@ public class Compilador extends javax.swing.JFrame
                         tabErrores.setVisible(true);
                         lblCerrar.setVisible(true);
                         Errores.setText("Hubo un total de " + con + " errores \n" + "\n" + error);
+                        Errores.requestFocus();
                     }
                     ban = false;
                     return;
@@ -189,7 +192,7 @@ public class Compilador extends javax.swing.JFrame
         lblCerrar = new javax.swing.JLabel();
         tabErrores = new javax.swing.JScrollPane();
         Errores = new javax.swing.JTextArea();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        tabCode = new javax.swing.JScrollPane();
         jtpCode = new javax.swing.JTextPane();
         btnGuardar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
@@ -218,7 +221,7 @@ public class Compilador extends javax.swing.JFrame
                 lblSeeMouseClicked(evt);
             }
         });
-        getContentPane().add(lblSee, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 650, 140, -1));
+        getContentPane().add(lblSee, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 830, 140, -1));
 
         lblCerrar.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         lblCerrar.setForeground(new java.awt.Color(255, 255, 255));
@@ -230,7 +233,7 @@ public class Compilador extends javax.swing.JFrame
                 lblCerrarMouseClicked(evt);
             }
         });
-        getContentPane().add(lblCerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1301, 530, 30, -1));
+        getContentPane().add(lblCerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1307, 697, 30, -1));
 
         Errores.setBackground(new java.awt.Color(0, 0, 0));
         Errores.setColumns(20);
@@ -239,13 +242,13 @@ public class Compilador extends javax.swing.JFrame
         Errores.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ERRORES", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI Light", 1, 18), new java.awt.Color(255, 255, 255))); // NOI18N
         tabErrores.setViewportView(Errores);
 
-        getContentPane().add(tabErrores, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 1340, 170));
+        getContentPane().add(tabErrores, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 690, 1340, 195));
 
         jtpCode.setBackground(new java.awt.Color(0, 0, 0));
         jtpCode.setForeground(new java.awt.Color(255, 255, 255));
-        jScrollPane1.setViewportView(jtpCode);
+        tabCode.setViewportView(jtpCode);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 890, 610));
+        getContentPane().add(tabCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 890, 610));
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Icon/icons8_save_48px.png"))); // NOI18N
         btnGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -366,7 +369,7 @@ public class Compilador extends javax.swing.JFrame
         
         //Para mostrar el numero de lineas en el panel
         numerolinea = new NumeroLinea(jtpCode);
-        jScrollPane1.setRowHeaderView(numerolinea);
+        tabCode.setRowHeaderView(numerolinea);
     }
     
     public void clearAllComp()
@@ -415,7 +418,6 @@ public class Compilador extends javax.swing.JFrame
     private javax.swing.JButton btnNuevo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jtaLexico;
@@ -423,6 +425,7 @@ public class Compilador extends javax.swing.JFrame
     public javax.swing.JTextPane jtpCode;
     private javax.swing.JLabel lblCerrar;
     private javax.swing.JLabel lblSee;
+    private javax.swing.JScrollPane tabCode;
     private javax.swing.JScrollPane tabErrores;
     // End of variables declaration//GEN-END:variables
 }
