@@ -18,6 +18,7 @@ public enum Tokens
     if_keyword,
     else_keyword,
     while_keyword,
+    end_while,
     for_keyword,
     plus,
     minus,
@@ -32,7 +33,7 @@ public enum Tokens
     equals_to,              // ==
     less_or_equals,         // <=
     greater_or_equals,      // >=
-    plus_equals,            // +=
+    plus_equals,            // += NO PONER TODO ESO +=
     minus_equals,           // -=
     mult_equals,            // *=
     div_equals,             // /=

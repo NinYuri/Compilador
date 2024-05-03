@@ -46,6 +46,7 @@ int nu=0;
 <YYINITIAL> "if" {c.linea=yyline; lexeme=yytext();return if_keyword;}
 <YYINITIAL> "else" {c.linea=yyline; lexeme=yytext();return else_keyword;}
 <YYINITIAL> "while" {c.linea=yyline; lexeme=yytext();return while_keyword;}
+<YYINITIAL> "endwhile" {c.linea=yyline; lexeme=yytext();return end_while;}
 <YYINITIAL> "for" {c.linea=yyline; lexeme=yytext();return for_keyword;}
 <YYINITIAL> "+" {c.linea=yyline; lexeme=yytext();return plus;}
 <YYINITIAL> "-" {c.linea=yyline; lexeme=yytext();return minus;}

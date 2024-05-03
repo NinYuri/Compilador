@@ -20,18 +20,20 @@ public class Compilador extends javax.swing.JFrame
     
     Stack<String> pilaaux = new Stack<>();
     Stack<String> pilaprin = new Stack<>();
-    String tokens[] = {"id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
-    String estados[] = {"L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
+    String tokens[] = {"while", "endwhile", ";", "id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
+    String estados[] = {"SENT", "ASIG", "L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
     String[][] acciones = {
-        {"R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "", ""},     //L'
-        {"E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
-        {"T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
-        {"F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
-        {"id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
+        {"while ( L ) SENT endwhile SENT", "", "saltar", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "id = L ;", "saltar", "saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
+        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "", ""},     //L'
+        {"saltar", "saltar", "saltar", "E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
+        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
+        {"saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
+        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
+        {"saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
+        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
+        {"saltar", "saltar", "saltar", "id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
     };
 
     public Compilador() 
@@ -67,7 +69,7 @@ public class Compilador extends javax.swing.JFrame
         pilaprin.clear();
         pilaaux.clear();
         pilaprin.push("$");
-        pilaprin.push("L");               
+        pilaprin.push("SENT");               
     }
     
     public void Sintactico(String token, int linea) 
@@ -108,6 +110,7 @@ public class Compilador extends javax.swing.JFrame
                         con++;
                         error += con + ". Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n";                         
                     }
+                    //esperaba el endwhile en SENT
                     break;
                 }
                 else {
