@@ -20,20 +20,21 @@ public class Compilador extends javax.swing.JFrame
     
     Stack<String> pilaaux = new Stack<>();
     Stack<String> pilaprin = new Stack<>();
-    String tokens[] = {"while", "endwhile", ";", "id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
-    String estados[] = {"SENT", "ASIG", "L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
+    String tokens[] = {"if", "then", "else", "endif", "while", "endwhile", ";", "id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
+    String estados[] = {"SENT", "SIGIF", "ASIG", "L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
     String[][] acciones = {
-        {"while ( L ) SENT endwhile SENT", "", "saltar", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
-        {"saltar", "saltar", "saltar", "id = L ;", "saltar", "saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar","saltar", "saltar", "saltar", "saltar", "sacar"},
-        {"saltar", "saltar", "saltar", "R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
-        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "", ""},     //L'
-        {"saltar", "saltar", "saltar", "E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
-        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
-        {"saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
-        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
-        {"saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
-        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
-        {"saltar", "saltar", "saltar", "id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
+        {"if ( L ) then SENT SIGIF endif SENT", "", "", "", "while ( L ) SENT endwhile SENT", "", "saltar", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "else SENT", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id = L ;", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "", ""},     //L'
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
     };
 
     public Compilador() 
@@ -82,7 +83,7 @@ public class Compilador extends javax.swing.JFrame
         while(!pilaprin.isEmpty() && !pilaprin.peek().equals(token))
         {
             for(int i = 0; i < tokens.length; i++) {
-                if(token.equals(tokens[i])) {
+                if(token.equals(tokens[i])) {                    
                     col = i;
                     break;
                 }
@@ -90,12 +91,22 @@ public class Compilador extends javax.swing.JFrame
             
             String estadoActual = pilaprin.peek();
             for(int j = 0; j < estados.length; j++)
-                if(String.valueOf(estados[j]).equals(estadoActual)) {
+                if(String.valueOf(estados[j]).equals(estadoActual)) {                    
                     estado = j;
                     break;
                 }
 
-            if(acciones[estado][col].equals("") || acciones[estado][col].equals("sacar")) {              
+            if(acciones[estado][col].equals("") || acciones[estado][col].equals("sacar")) { 
+                if(pilaprin.peek().equals("endwhile")){
+                    con++;
+                    error += con + ". Error sintáctico: esperaba un endwhile" + "\n";
+                    Mostrar();
+                }                
+                else if(pilaprin.peek().equals("endif")) {
+                    con++;
+                    error += con + ". Error sintáctico: esperaba un endif" + "\n";
+                    Mostrar();
+                }             
                 pilaprin.pop();
                 Mostrar();                    
             }
@@ -109,8 +120,7 @@ public class Compilador extends javax.swing.JFrame
                     else if(estados[estado].equals("L'") || estados[estado].equals("R'") || estados[estado].equals("E'") || estados[estado].equals("T'")) {
                         con++;
                         error += con + ". Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n";                         
-                    }
-                    //esperaba el endwhile en SENT
+                    }                    
                     break;
                 }
                 else {

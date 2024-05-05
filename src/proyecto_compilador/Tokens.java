@@ -16,6 +16,7 @@ public enum Tokens
     character,
     then,
     if_keyword,
+    end_if,
     else_keyword,
     while_keyword,
     end_while,
