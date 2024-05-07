@@ -23,17 +23,17 @@ public class Compilador extends javax.swing.JFrame
     String tokens[] = {"if", "then", "else", "endif", "while", "endwhile", ";", "id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
     String estados[] = {"SENT", "SIGIF", "ASIG", "L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
     String[][] acciones = {
-        {"if ( L ) then SENT SIGIF endif SENT", "", "", "", "while ( L ) SENT endwhile SENT", "", "saltar", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"if ( L ) then SENT SIGIF endif SENT", "saltar", "", "", "while ( L ) SENT endwhile SENT", "", "saltar", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
         {"saltar", "saltar", "else SENT", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id = L ;", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "", "", "", "", "", "&& R L'", "|| R L'", "", ""},     //L'
+        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "&& R L'", "|| R L'", "", ""},     //L'
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
+        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
+        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
+        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
     };
 
@@ -73,8 +73,18 @@ public class Compilador extends javax.swing.JFrame
         pilaprin.push("SENT");               
     }
     
+    public boolean Tokens(String est) 
+    {
+        for (String tk : tokens) {
+            if (est.equals(tk))
+                return true;
+        }
+        return false;
+    }
+    
     public void Sintactico(String token, int linea) 
-    {        
+    {      
+        boolean ban = true;
         int col = -1;
         int estado = 0;
         String accion[] = null;
@@ -90,37 +100,42 @@ public class Compilador extends javax.swing.JFrame
             }
             
             String estadoActual = pilaprin.peek();
+            if(Tokens(estadoActual)) {
+                System.out.println("");
+                if(!estadoActual.equals(token)) {
+                    Mostrar();
+                    System.out.println("");
+                    error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un " + pilaprin.pop() + "\n";
+                }
+            }
+            System.out.println("Token que analiza:" + token);
             for(int j = 0; j < estados.length; j++)
-                if(String.valueOf(estados[j]).equals(estadoActual)) {                    
+                if(String.valueOf(estados[j]).equals(estadoActual)) {                                        
                     estado = j;
+                    System.out.println("Estado" + estadoActual);
+                    System.out.println("Estado" + j);
                     break;
                 }
 
-            if(acciones[estado][col].equals("") || acciones[estado][col].equals("sacar")) { 
-                if(pilaprin.peek().equals("endwhile")){
-                    con++;
-                    error += con + ". Error sintáctico: esperaba un endwhile" + "\n";
-                    Mostrar();
-                }                
-                else if(pilaprin.peek().equals("endif")) {
-                    con++;
-                    error += con + ". Error sintáctico: esperaba un endif" + "\n";
-                    Mostrar();
-                }             
+            if(acciones[estado][col].equals("") || acciones[estado][col].equals("sacar")) {                            
                 pilaprin.pop();
                 Mostrar();                    
             }
             else
                 if(acciones[estado][col].equals("saltar"))
                 {                    
-                    if(estados[estado].equals("L") || estados[estado].equals("R") || estados[estado].equals("E") || estados[estado].equals("T") || estados[estado].equals("F")) {
-                        con++;
-                        error += con + ". Error sintáctico en la línea " + linea + ": esperaba un operando" + "\n";                        
+                    if(estados[estado].equals("L") || estados[estado].equals("R") || estados[estado].equals("E") || estados[estado].equals("T") || estados[estado].equals("F")){
+                        if(!error.contains(String.valueOf(linea)))
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un operando" + "\n";                    
                     }
                     else if(estados[estado].equals("L'") || estados[estado].equals("R'") || estados[estado].equals("E'") || estados[estado].equals("T'")) {
-                        con++;
-                        error += con + ". Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n";                         
-                    }                    
+                        if(token.equals("<") || token.equals(">") || token.equals("<=") || token.equals(">=") || token.equals("!=")) {
+                            if(!error.contains(String.valueOf(linea)))
+                                error += (++con) + ". Error sintáctico en la línea " + linea + ": no puede haber dos operadores relaciones consecutivos sin un lógico entre ellos \n";                       
+                        } 
+                        else if(!error.contains(String.valueOf(linea)))
+                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n";                                                              
+                    }
                     break;
                 }
                 else {
@@ -133,11 +148,10 @@ public class Compilador extends javax.swing.JFrame
                         pilaprin.push(pilaaux.pop());                                          
 
                     Mostrar();
-                }            
+                }
         }
-        
         if(pilaprin.peek().equals(token))
-            pilaprin.pop(); // Concuerda
+                pilaprin.pop(); // Concuerda
     }
     
     public void Lexico()
@@ -168,7 +182,10 @@ public class Compilador extends javax.swing.JFrame
                     if(!error.isEmpty()) {
                         tabErrores.setVisible(true);
                         lblCerrar.setVisible(true);
-                        Errores.setText("Hubo un total de " + con + " errores \n" + "\n" + error);
+                        if(con > 1)
+                            Errores.setText("Hubo un total de " + con + " errores \n" + "\n" + error);
+                        else
+                            Errores.setText("Hubo un total de " + con + " error \n" + "\n" + error);
                         Errores.requestFocus();
                     }
                     ban = false;
