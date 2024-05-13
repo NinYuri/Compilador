@@ -20,21 +20,23 @@ public class Compilador extends javax.swing.JFrame
     
     Stack<String> pilaaux = new Stack<>();
     Stack<String> pilaprin = new Stack<>();
-    String tokens[] = {"if", "then", "else", "endif", "while", "endwhile", ";", "id", "num", "litcar", "litcad", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
-    String estados[] = {"SENT", "SIGIF", "ASIG", "L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
+    String tokens[] = {"int", "float", "string", "char", "bool", ",", "if", "then", "else", "endif", "while", "endwhile", "=", ";", "id", "num", "litcar", "litcad", "true", "false", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
+    String estados[] = {"DEC", "SIGID", "SENT", "SIGIF", "ASIG", "L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
     String[][] acciones = {
-        {"if ( L ) then SENT SIGIF endif SENT", "saltar", "", "", "while ( L ) SENT endwhile SENT", "", "saltar", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
-        {"saltar", "saltar", "else SENT", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id = L ;", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
-        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "&& R L'", "|| R L'", "", ""},     //L'
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
-        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
-        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
-        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id", "num", "litcar", "litcad", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
+        {"int id SIGID ; DEC", "float id SIGID ; DEC", "string id SIGID ; DEC", "char id SIGID ; DEC", "bool id SIGID ; DEC", "saltar",	"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar",	"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar",	"saltar", "saltar", "saltar", "saltar",	"saltar", "saltar", "saltar", "saltar",	"saltar", "saltar", "saltar", "saltar",	"saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "saltar", "saltar", ", id SIGID", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "= L SIGID", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "if ( L ) then SENT SIGIF endif SENT", "saltar", "", "saltar", "while ( L ) SENT endwhile SENT", "", "saltar", "saltar", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "else SENT", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id = L ;", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //ASIG
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "= L", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "&& R L'", "|| R L'", "", ""},     //L'
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id", "num", "litcar", "litcad", "true", "false", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
     };
 
     public Compilador() 
@@ -70,7 +72,7 @@ public class Compilador extends javax.swing.JFrame
         pilaprin.clear();
         pilaaux.clear();
         pilaprin.push("$");
-        pilaprin.push("SENT");               
+        pilaprin.push("DEC");               
     }
     
     public boolean Tokens(String est) 
@@ -92,25 +94,26 @@ public class Compilador extends javax.swing.JFrame
         Mostrar();
         while(!pilaprin.isEmpty() && !pilaprin.peek().equals(token))
         {
-            for(int i = 0; i < tokens.length; i++) {
-                if(token.equals(tokens[i])) {                    
-                    col = i;
-                    break;
-                }
-            }
-            
             String estadoActual = pilaprin.peek();
             if(Tokens(estadoActual)) {
                 System.out.println("");
                 if(!estadoActual.equals(token)) {
                     Mostrar();
                     System.out.println("");
-                    error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un " + pilaprin.pop() + "\n";
+                    if(!error.contains(String.valueOf(linea)))
+                        error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un " + pilaprin.pop() + "\n";
                 }
             }
+            
+            for(int i = 0; i < tokens.length; i++) {
+                if(token.equals(tokens[i])) {                    
+                    col = i;
+                    break;
+                }
+            }             
             System.out.println("Token que analiza:" + token);
             for(int j = 0; j < estados.length; j++)
-                if(String.valueOf(estados[j]).equals(estadoActual)) {                                        
+                if(String.valueOf(estados[j]).equals(pilaprin.peek())) {                                        
                     estado = j;
                     System.out.println("Estado" + estadoActual);
                     System.out.println("Estado" + j);
@@ -123,7 +126,8 @@ public class Compilador extends javax.swing.JFrame
             }
             else
                 if(acciones[estado][col].equals("saltar"))
-                {                    
+                {
+                    System.out.println("Se lo salto");
                     if(estados[estado].equals("L") || estados[estado].equals("R") || estados[estado].equals("E") || estados[estado].equals("T") || estados[estado].equals("F")){
                         if(!error.contains(String.valueOf(linea)))
                             error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un operando" + "\n";                    
@@ -135,6 +139,16 @@ public class Compilador extends javax.swing.JFrame
                         } 
                         else if(!error.contains(String.valueOf(linea)))
                                 error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n";                                                              
+                    }
+                    else if(estados[estado].equals("SENT")){ //sigue estando mal, no sé que hacer si no recibe un if o while
+                        if(token.equals("(")) {
+                            if(!error.contains(String.valueOf(linea))) {
+                                System.out.println("Error de if o while");
+                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un if o un while" + "\n";
+                            }
+                        }
+                        else if(!error.contains(String.valueOf(linea)))
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un id" + "\n";
                     }
                     break;
                 }

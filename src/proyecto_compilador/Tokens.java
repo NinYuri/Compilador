@@ -14,6 +14,7 @@ public enum Tokens
     floatType,
     stringType,
     character,
+    bool,
     then,
     if_keyword,
     end_if,
@@ -47,5 +48,7 @@ public enum Tokens
     num,
     litcar,
     litcad,
+    trueType,
+    falseType,
     Error
 }

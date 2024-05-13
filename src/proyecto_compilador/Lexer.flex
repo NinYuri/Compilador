@@ -42,6 +42,7 @@ int nu=0;
 <YYINITIAL> "float" {c.linea=yyline; lexeme=yytext();return floatType;}
 <YYINITIAL> "string" {c.linea=yyline; lexeme=yytext();return stringType;}
 <YYINITIAL> "char" {c.linea=yyline; lexeme=yytext();return character;}
+<YYINITIAL> "bool" {c.linea=yyline; lexeme=yytext();return bool;}
 <YYINITIAL> "then" {c.linea=yyline; lexeme=yytext();return then;}
 <YYINITIAL> "if" {c.linea=yyline; lexeme=yytext();return if_keyword;}
 <YYINITIAL> "endif" {c.linea=yyline; lexeme=yytext();return end_if;}
@@ -85,34 +86,6 @@ int nu=0;
 <YYINITIAL> {D} {c.linea=yyline; lexeme=yytext();return num;}
 <YYINITIAL> {CAR} {c.linea=yyline; lexeme=yytext();return litcar;}
 <YYINITIAL> {CA} {c.linea=yyline; lexeme=yytext();return litcad;}
+<YYINITIAL> "true" {c.linea=yyline; lexeme=yytext();return trueType;}
+<YYINITIAL> "false" {c.linea=yyline; lexeme=yytext();return falseType;}
 . {c.linea=yyline; lexeme=yytext();return Error;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

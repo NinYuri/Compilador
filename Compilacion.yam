@@ -1,3 +1,2 @@
-if(yuri < 8 || var > 0)
-then
-	vale = 5
+int c, d = 6
+bool = 5;
