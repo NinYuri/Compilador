@@ -1,2 +1,13 @@
-int c, d = 6
-bool = 5;
+program nuevo (string arg, int arg)
+	function suma(string sd) : int 
+	      sum = x = x;
+	      sum = 56 % + 5;
+	endfunction
+	
+	procedure mostrar(string x)
+	      x = t;
+	endprocedure
+
+	int p = 6;
+endprogram
+ 

@@ -3,7 +3,14 @@ package proyecto_compilador;
 public enum Tokens 
 {
     program,
-    idp,                    // id del programa, nombre de la clase
+    idProgram,                    // id del programa, nombre de la clase
+    endprogram,
+    procedure,
+    idP,
+    endprocedure,
+    function,
+    idF,
+    endfunction,
     open_key,               // llave de apertura {
     close_key,              // llave de cierre }
     open_parenth,           // paréntesis de apertura (
@@ -44,6 +51,7 @@ public enum Tokens
     logical_or,             // ||
     semicolon,
     comma,
+    dots,
     id,
     num,
     litcar,

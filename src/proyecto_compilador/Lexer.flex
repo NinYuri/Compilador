@@ -31,7 +31,12 @@ int nu=0;
 {espa} {/*Ignore*/}
 {esp} {/*Ignore*/}
 {salto} {/*Ignore*/}
-<YYINITIAL> "program" {estado = 1;c.linea=yyline; lexeme=yytext();return program;}
+<YYINITIAL> "program" {estado = 1; c.linea=yyline; lexeme=yytext();return program;}
+<YYINITIAL> "endprogram" {c.linea=yyline; lexeme=yytext();return endprogram;}
+<YYINITIAL> "procedure" {estado = 2; c.linea=yyline; lexeme=yytext(); return procedure;}
+<YYINITIAL> "endprocedure" {c.linea=yyline; lexeme=yytext();return endprocedure;}
+<YYINITIAL> "function" {estado = 3; c.linea=yyline; lexeme=yytext(); return function;}
+<YYINITIAL> "endfunction" {c.linea=yyline; lexeme=yytext(); return endfunction;}
 <YYINITIAL> "{" {c.linea=yyline; lexeme=yytext();return open_key;}
 <YYINITIAL> "}" {c.linea=yyline; lexeme=yytext();return close_key;}
 <YYINITIAL> "(" {c.linea=yyline; lexeme=yytext();return open_parenth;}
@@ -72,11 +77,24 @@ int nu=0;
 <YYINITIAL> "||" {c.linea=yyline; lexeme=yytext();return logical_or;}
 <YYINITIAL> ";" {c.linea=yyline; lexeme=yytext();return semicolon;}
 <YYINITIAL> "," {c.linea=yyline; lexeme=yytext();return comma;}
+<YYINITIAL> ":" {c.linea=yyline; lexeme=yytext();return dots;}
+<YYINITIAL> "true" {c.linea=yyline; lexeme=yytext();return trueType;}
+<YYINITIAL> "false" {c.linea=yyline; lexeme=yytext();return falseType;}
 <YYINITIAL> {L}({L}{D})* {if (estado == 1) { // Si se encontró la palabra clave program 
         c.linea = yyline;
         lexeme = yytext();
-        estado = 2;
-        return idp;
+        estado = 4;
+        return idProgram;
+    } else if(estado == 2) {
+        c.linea = yyline;
+        lexeme = yytext();
+        estado = 4;
+        return idP;
+    } else if(estado == 3) {
+        c.linea = yyline;
+        lexeme = yytext();
+        estado = 4;
+        return idF;
     } else {
         c.linea = yyline;
         lexeme = yytext();
@@ -86,6 +104,4 @@ int nu=0;
 <YYINITIAL> {D} {c.linea=yyline; lexeme=yytext();return num;}
 <YYINITIAL> {CAR} {c.linea=yyline; lexeme=yytext();return litcar;}
 <YYINITIAL> {CA} {c.linea=yyline; lexeme=yytext();return litcad;}
-<YYINITIAL> "true" {c.linea=yyline; lexeme=yytext();return trueType;}
-<YYINITIAL> "false" {c.linea=yyline; lexeme=yytext();return falseType;}
 . {c.linea=yyline; lexeme=yytext();return Error;}
