@@ -1,13 +1,19 @@
 program nuevo (string arg, int arg)
-	function suma(string sd) : int 
-	      sum = x = x;
-	      sum = 56 % + 5;
+	function suma(int sd, int b): bool 
+	      if(sd >= b) then
+	          sum = 56 % 5;
+	          return true;
+	      else
+	           return false;
+	      
 	endfunction
 	
 	procedure mostrar(string x)
-	      x = t;
+	      print(x + y);
 	endprocedure
 
 	int p = 6;
+	char f = 'd', i;
+	read("La suma es: ", 4);
 endprogram
  

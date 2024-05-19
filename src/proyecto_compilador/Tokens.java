@@ -17,6 +17,7 @@ public enum Tokens
     close_parenth,          // paréntesis de cierre )
     read,
     print,
+    retorna,
     integer,
     floatType,
     stringType,

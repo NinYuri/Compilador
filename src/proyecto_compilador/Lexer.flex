@@ -43,6 +43,7 @@ int nu=0;
 <YYINITIAL> ")" {c.linea=yyline; lexeme=yytext();return close_parenth;}
 <YYINITIAL> "read" {c.linea=yyline; lexeme=yytext();return read;}
 <YYINITIAL> "print" {c.linea=yyline; lexeme=yytext();return print;}
+<YYINITIAL> "return" {c.linea=yyline; lexeme=yytext();return retorna;}
 <YYINITIAL> "int" {c.linea=yyline; lexeme=yytext();return integer;}
 <YYINITIAL> "float" {c.linea=yyline; lexeme=yytext();return floatType;}
 <YYINITIAL> "string" {c.linea=yyline; lexeme=yytext();return stringType;}
