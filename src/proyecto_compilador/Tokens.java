@@ -3,7 +3,7 @@ package proyecto_compilador;
 public enum Tokens 
 {
     program,
-    idProgram,                    // id del programa, nombre de la clase
+    idProgram,             // id del programa, nombre de la clase
     endprogram,
     procedure,
     idP,

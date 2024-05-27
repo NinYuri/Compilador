@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +19,8 @@ public class Compilador extends javax.swing.JFrame
     Directorio direc;
     String error = "";
     int con = 0;
+    TablaSimbolos tablaPrin = new TablaSimbolos();
+    List<String[]> tokensTabla = new ArrayList<>();
     
     Stack<String> pilaaux = new Stack<>();
     Stack<String> pilaprin = new Stack<>();
@@ -26,7 +30,7 @@ public class Compilador extends javax.swing.JFrame
         {"program idProgram ( LISTA_ARG ) MOD DEC SENT endprogram", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //PROGRAM
         {"saltar", "saltar", "saltar", "procedure idP ( LISTA_ARG ) SENT endprocedure MOD", "", "", "function idF ( LISTA_ARG ) : TIPOS SENT endfunction MOD", "", "", "", "", "", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},   //MOD
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "int id SIGARG", "float id SIGARG", "string id SIGARG", "char id SIGARG", "bool id SIGARG", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},    //LISTA_ARG
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", ", LISTA_ARG", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},   //SIGARG
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", ", LISTA_ARG", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},   //SIGARG
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "int", "float", "string", "char", "bool", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},    //TIPOS
         {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "int id SIGID ; DEC", "float id SIGID ; DEC", "string id SIGID ; DEC", "char id SIGID ; DEC", "bool id SIGID ; DEC", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //DEC
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", ", id SIGID", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "= L SIGID", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //SIGID
@@ -40,7 +44,7 @@ public class Compilador extends javax.swing.JFrame
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
         {"saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
-        {"saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", ", F", "saltar", "saltar", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
+        {"saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id", "num", "litcar", "litcad", "true", "false", "read ( L ) ;", "print ( L ) ;", "return L ;", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
     };
 
@@ -52,7 +56,91 @@ public class Compilador extends javax.swing.JFrame
         setResizable(false);
         tabErrores.setVisible(false);
         lblCerrar.setVisible(false);
-        lblSee.setVisible(false);               
+        lblSee.setVisible(false); 
+    }
+    
+    public void Tabla(String lexema, String token)
+    {
+        String componente = "";
+        
+        switch(token){
+            case "idProgram":
+                componente = "idProgram";
+                break;
+            case "idP":
+                componente = "idP";
+                break;
+            case "idF":
+                componente = "idF";
+                break;
+            case "id":
+                componente = "id";
+                break;
+            case "plus", "minus", "mult", "div", "res", "equal", "less_than", "greater_than",
+                    "not", "different_to", "less_or_equals", "greater_or_equals", "logical_and",
+                    "logical_or":
+                componente = "Operador";
+                break;
+            case "semicolon", "comma", "dots", "open_parenth", "close_parenth":
+                componente = "Símbolo";
+                break;
+            case "program", "endprogram", "procedure", "endprocedure", "function", "endfunction",
+                    "read", "print", "retorna", "integer", "floatType", "stringType", "character", 
+                    "bool", "then", "if_keyword", "else_keyword", "end_if", "while_keyword", 
+                    "end_while":
+                componente = "Palabra reservada";
+                break;
+            case "num", "litcar", "litcad", "trueType", "falseType":
+                componente = "Literal";
+                break;
+        }
+        tokensTabla.add(new String[]{lexema, componente, ""});
+    }
+    
+    public void tablaPrin()
+    {
+        for(String[] tokenProg : tokensTabla) {
+            String nombre = tokenProg[0];
+            String componente = tokenProg[1];
+
+            if(componente.equals("idF") || componente.equals("idP")){
+                switch(componente){
+                    case "idF":                       
+                        tablaPrin.agregarSimbolo(tokenProg);
+                        tablaPrin.cambiarContexto(Contexto.FUNCTION);
+                        tablaPrin.agregarSimbolo(tokenProg);
+                        tokenProg[2] = String.valueOf(tablaPrin.referenciaFun());
+                        break;
+                    case "idP":
+                        tablaPrin.agregarSimbolo(tokenProg);
+                        tablaPrin.cambiarContexto(Contexto.PROCEDURE);
+                        tablaPrin.agregarSimbolo(tokenProg);
+                        tokenProg[2] = String.valueOf(tablaPrin.referenciaPro());
+                        break;
+                    default:
+                        tablaPrin.agregarSimbolo(tokenProg);
+                }
+            } else {
+                switch(nombre){
+                    case "program":
+                        tablaPrin.cambiarContexto(Contexto.PRINCIPAL);
+                        tablaPrin.agregarSimbolo(tokenProg);
+                        break;
+                    case "endprogram":
+                        tablaPrin.finalizarContexto();
+                        tablaPrin.agregarSimbolo(tokenProg);
+                        break;                    
+                    case "endfunction":                        
+                    case "endprocedure":
+                        tablaPrin.agregarSimbolo(tokenProg);
+                        tablaPrin.finalizarContexto();
+                        tablaPrin.cambiarContexto(Contexto.PRINCIPAL);                          
+                        break;
+                    default:
+                        tablaPrin.agregarSimbolo(tokenProg);                        
+                }
+            }
+        }
     }
     
     public void Mostrar()
@@ -101,12 +189,14 @@ public class Compilador extends javax.swing.JFrame
         {
             String estadoActual = pilaprin.peek();
             if(Tokens(estadoActual)) {
-                System.out.println("");
                 if(!estadoActual.equals(token)) {
                     Mostrar();
-                    System.out.println("");
+                    System.out.println("Entró");
                     if(!error.contains(String.valueOf(linea))) {
-                        error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un " + pilaprin.pop() + "\n";
+                        if((linea - 1) != 0)
+                            error += (++con) + ". Error sintáctico en la línea " + (linea - 1) + ": esperaba un " + pilaprin.pop() + "\n";
+                        else
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un " + pilaprin.pop() + "\n";
                         Mostrar();
                     }
                 }
@@ -132,10 +222,16 @@ public class Compilador extends javax.swing.JFrame
                 Mostrar();                    
             }
             else
-                if(acciones[estado][col].equals("saltar"))
+                if(acciones[estado][col].equals("saltar")) 
                 {
-                    System.out.println("Se lo salto");
-                    if(estados[estado].equals("L") || estados[estado].equals("R") || estados[estado].equals("E") || estados[estado].equals("T") || estados[estado].equals("F")){
+                    if(estados[estado].equals("LISTA_ARG")){
+                        if(!error.contains(String.valueOf(linea)))
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un argumento" + "\n";
+                        Mostrar();
+                        pilaprin.pop();
+                        Mostrar();
+                    }                        
+                    else if(estados[estado].equals("L") || estados[estado].equals("R") || estados[estado].equals("E") || estados[estado].equals("T") || estados[estado].equals("F")){
                         if(!error.contains(String.valueOf(linea)))
                             error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un operando" + "\n";                    
                     }
@@ -147,7 +243,7 @@ public class Compilador extends javax.swing.JFrame
                         else if(!error.contains(String.valueOf(linea)))
                                 error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n";                                                              
                     }
-                    else if(estados[estado].equals("SENT")){ //sigue estando mal, no sé que hacer si no recibe un if o while
+                    else if(estados[estado].equals("SENT")){
                         if(token.equals("(")) {
                             if(!error.contains(String.valueOf(linea))) {
                                 System.out.println("Error de if o while");
@@ -199,7 +295,7 @@ public class Compilador extends javax.swing.JFrame
                 if(token == null) {
                     resLexico += "$";
                     jtaLexico.setText(resLexico);
-                    Sintactico("$", (c.linea + 1));
+                    Sintactico("$", (c.linea + 1));                    
                     if(!error.isEmpty()) {
                         tabErrores.setVisible(true);
                         lblCerrar.setVisible(true);
@@ -207,7 +303,9 @@ public class Compilador extends javax.swing.JFrame
                             Errores.setText("Hubo un total de " + con + " errores \n" + "\n" + error);
                         else
                             Errores.setText("Hubo un total de " + con + " error \n" + "\n" + error);
-                        Errores.requestFocus();
+                        Errores.requestFocus();                       
+                        tablaPrin();
+                        tablaPrin.imprimirTabla();
                     }
                     ban = false;
                     return;
@@ -215,14 +313,16 @@ public class Compilador extends javax.swing.JFrame
                 switch(token) {
                     case Error:
                         con++;
-                        error += con + ". Error léxico en la línea " + (c.linea + 1) + " con el lexema " + lexer.lexeme + "\n";                        
+                        error += con + ". Error léxico en la línea " + (c.linea + 1) + ": el lexema " + lexer.lexeme + " es irreconocible \n";                        
                         break;
                     case program, idProgram, idP, idF, read, print, then, id, num, litcar, litcad:
                         resLexico += token + "\n";
+                        Tabla(String.valueOf(lexer.lexeme), String.valueOf(token));
                         Sintactico(String.valueOf(token), (c.linea + 1));
                         break;
                     default:
                         resLexico += lexer.lexeme + "\n";
+                        Tabla(String.valueOf(lexer.lexeme), String.valueOf(token));
                         Sintactico(String.valueOf(lexer.lexeme), (c.linea + 1));
                         break;
                 }                                

@@ -1,19 +1,24 @@
-program nuevo (string arg, int arg)
-	function suma(int sd, int b): bool 
-	      if(sd >= b) then
+program Nuevo (string arg,)
+	function sum(int sd, int b): bool 
+	      if(sd >= b || b> 7)  then
 	          sum = 56 % 5;
-	          return true;
+	           true;
 	      else
 	           return false;
-	      
-	endfunction
+	      endif
+	
 	
 	procedure mostrar(string x)
 	      print(x + y);
 	endprocedure
 
-	int p = 6;
-	char f = 'd', i;
+	procedure nuevo(string x)
+	      print(x + y);
+	
+
+	int p = 6, id = 9;
+	char f = 'd', i
+	//R u jkng
 	read("La suma es: ", 4);
 endprogram
  
