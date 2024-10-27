@@ -1,14 +1,21 @@
- Nuevo (int  y
-	 
-function  (int sd, int b): bool  @
-	      if(sd >= b || b> 7 then
-	          sum = 56 % 5
-	           return true;
-	      else
-	           return false;
-	     endif
-
-	 p = 6, id = 9; 	char f = 'd', i;
-	
-endprogram
+program hol@ (int num)
  
+procedure nu  (int x)
+	     if(sd >= b || b> 7 ) then
+	           sum = 56 % 5;
+	           return ;
+	     else 
+	           return 
+	     endif
+endprocedure
+
+function suma(int x, int y): int
+    return true;
+
+
+string x = 45, ;
+char uni = 'f';
+nu(89);
+suma(6, nu(89) );
+endprogram
+endprogram

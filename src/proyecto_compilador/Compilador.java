@@ -25,27 +25,28 @@ public class Compilador extends javax.swing.JFrame
     Stack<String> pilaaux = new Stack<>();
     Stack<String> pilaprin = new Stack<>();
     String tokens[] = {"program", "idProgram", "endprogram", "procedure", "idP", "endprocedure", "function", "idF", "endfunction", ":", "int", "float", "string", "char", "bool", ",", "if", "then", "else", "endif", "while", "endwhile", "=", ";", "id", "num", "litcar", "litcad", "true", "false", "read", "print", "return", "(", ")", "+", "-", "*", "/", "%", "<", ">", "<=", ">=", "!=", "&&", "||", "!", "$"};
-    String estados[] = {"PROGRAM", "MOD", "LISTA_ARG", "SIGARG", "TIPOS", "DEC", "SIGID", "SENT", "SIGIF", "ASIG", "L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
+    String estados[] = {"PROGRAM", "MOD", "LISTA_ARG", "SIGARG", "TIPOS", "DEC", "SIGID", "SENT", "SIGIF", "ASIG", "SIGL", "L", "L'", "R", "R'", "E", "E'", "T", "T'", "F"};
     String[][] acciones = {
         {"program idProgram ( LISTA_ARG ) MOD DEC SENT endprogram", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //PROGRAM
         {"saltar", "saltar", "saltar", "procedure idP ( LISTA_ARG ) SENT endprocedure MOD", "", "", "function idF ( LISTA_ARG ) : TIPOS SENT endfunction MOD", "", "", "", "", "", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},   //MOD
-        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "int id SIGARG", "float id SIGARG", "string id SIGARG", "char id SIGARG", "bool id SIGARG", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},    //LISTA_ARG
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", ", LISTA_ARG", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},   //SIGARG
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "int", "float", "string", "char", "bool", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},    //TIPOS
-        {"saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "int id SIGID ; DEC", "float id SIGID ; DEC", "string id SIGID ; DEC", "char id SIGID ; DEC", "bool id SIGID ; DEC", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //DEC
+        {"saltar", "saltar", "saltar", "", "", "saltar", "", "", "saltar", "saltar", "int id SIGARG", "float id SIGARG", "string id SIGARG", "char id SIGARG", "bool id SIGARG", "saltar", "", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},    //LISTA_ARG
+        {"saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", ", LISTA_ARG", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},   //SIGARG
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "int", "float", "string", "char", "bool", "saltar", "", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},    //TIPOS
+        {"saltar", "saltar", "", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "int id SIGID ; DEC", "float id SIGID ; DEC", "string id SIGID ; DEC", "char id SIGID ; DEC", "bool id SIGID ; DEC", "saltar", "", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //DEC
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", ", id SIGID", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "= L SIGID", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //SIGID
-        {"saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "", "saltar", "", "", "", "", "", "saltar", "if ( L ) then SENT SIGIF endif SENT", "saltar", "", "", "while ( L ) SENT endwhile SENT", "", "saltar", "", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "L SENT", "L SENT", "L", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},    //SENT
+        {"saltar", "saltar", "", "", "L SENT", "", "", "L SENT", "", "saltar", "", "", "", "", "", "saltar", "if ( L ) then SENT SIGIF endif SENT", "saltar", "", "", "while ( L ) SENT endwhile SENT", "", "saltar", "", "ASIG SENT", "saltar", "saltar", "saltar", "saltar", "saltar", "L SENT", "L SENT", "L", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},    //SENT
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "else SENT", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //SIGIF
         {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id = L ;", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}, //ASIG
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
-        {"saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "", "saltar", "saltar", "= L", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "&& R L'", "|| R L'", "", ""},     //L'
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
-        {"saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
-        {"saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
-        {"saltar", "saltar", "", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
-        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "id", "num", "litcar", "litcad", "true", "false", "read ( L ) ;", "print ( L ) ;", "return L ;", "( L )", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
+        {"saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", ", F SIGL", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},
+        {"saltar", "saltar", "saltar", "", "R L'", "", "", "R L'", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "saltar", "", "saltar", "", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "R L'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "! L", "sacar"},    //L
+        {"saltar", "saltar", "", "saltar", "", "", "saltar", "", "", "saltar", "", "", "", "", "", "", "saltar", "", "", "", "saltar", "saltar", "= L", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "&& R L'", "|| R L'", "", ""},     //L'
+        {"saltar", "saltar", "saltar", "saltar", "E R'", "saltar", "saltar", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "E R'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //R
+        {"saltar", "saltar", "", "saltar", "", "", "saltar", "", "", "saltar", "", "", "", "", "", "", "saltar", "", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "", "", "", "< E", "> E", "<= E", ">= E", "!= E", "", "", "", ""},             //R'
+        {"saltar", "saltar", "saltar", "saltar", "T E'", "saltar", "saltar", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "T E'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //E
+        {"saltar", "saltar", "", "saltar", "", "", "saltar", "", "", "saltar", "", "", "", "", "", "", "saltar", "", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "+ T E'", "- T E'", "", "", "", "", "", "", "", "", "", "", "", ""},       //E'
+        {"saltar", "saltar", "saltar", "saltar", "F T'", "saltar", "saltar", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "F T'", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"},       //T
+        {"saltar", "saltar", "", "saltar", "", "", "saltar", "", "", "saltar", "", "", "", "", "", "", "saltar", "", "", "", "saltar", "saltar", "", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "", "", "* F T'", "/ F T'", "% F T'", "", "", "", "", "", "", "", "", ""},       //T'
+        {"saltar", "saltar", "", "saltar", "idP ( L SIGL ) ;", "saltar", "saltar", "idF ( L SIGL ) ;", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "", "id", "num", "litcar", "litcad", "true", "false", "read ( L ) ;", "print ( L ) ;", "return L ;", "( L )", "", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "saltar", "sacar"}          //F
     };
 
     public Compilador() 
@@ -165,7 +166,9 @@ public class Compilador extends javax.swing.JFrame
         pilaprin.clear();
         pilaaux.clear();
         pilaprin.push("$");
-        pilaprin.push("PROGRAM");               
+        pilaprin.push("PROGRAM");         
+        tokensTabla = new ArrayList<>();
+        tablaPrin = new TablaSimbolos();
     }
     
     public boolean Tokens(String est) 
@@ -183,25 +186,23 @@ public class Compilador extends javax.swing.JFrame
             if(!estadoActual.equals(token)) {
                 Mostrar();
                 System.out.println("Lo sacó" + token);
-                System.out.println("Cima" + pilaprin.peek());                     
-                if(!error.contains(String.valueOf(linea))) {
+                System.out.println("Cima" + pilaprin.peek()); 
+                if(error.isEmpty() && linea == 1)
                     error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un " + pilaprin.pop() + "\n";
-                    Mostrar();
-                }
-                else {
+                else if(!error.contains(String.valueOf(linea)))
+                    error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un " + pilaprin.pop() + "\n";
+                else
                     pilaprin.pop();
-                    Mostrar();
-                }
-            }   
+            }
     }
     
-    public String Error(int estado) 
+    public String Error(int estado)
     {
-        String expected = "";
+        String res = "";
         for(int i = 0; i < tokens.length; i++)
-            if(!acciones[estado][i].equals("saltar") && !acciones[estado][i].equals("sacar"))
-                expected += tokens[i] + ", ";
-        return expected;
+            if(!acciones[estado][i].equals("") && !acciones[estado][i].equals("saltar") && !acciones[estado][i].equals("sacar"))
+                res += tokens[i] + ", ";        
+        return res.substring(0, res.length() - 2);
     }
     
     public void Sintactico(String token, int linea) 
@@ -210,12 +211,11 @@ public class Compilador extends javax.swing.JFrame
         int estado = 0;
         int j = 0;
         String accion[] = null;
-        
+                
         Mostrar();
         while(!pilaprin.isEmpty() && !pilaprin.peek().equals(token))
-        {
+        {      
             System.out.println("Token que analiza:" + token); 
-            tokensIguales(token, linea);
             
             for(int i = 0; i < tokens.length; i++) {
                 if(token.equals(tokens[i])) {                    
@@ -233,24 +233,60 @@ public class Compilador extends javax.swing.JFrame
             }
             if(j != estados.length) {
                 if(acciones[estado][col].equals("") || acciones[estado][col].equals("sacar")) {                            
+                    if(estado == 2)
+                        if(!error.contains(String.valueOf(linea))){
+                            Mostrar();
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un argumento \n";  
+                        }
+                    if(estado == 3 && (token.equals("id")))
+                        if(!error.contains(String.valueOf(linea))){
+                            Mostrar();
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba una , \n";  
+                        }
+                    if(estado == 4)
+                        if(!error.contains(String.valueOf(linea))) {
+                            Mostrar();
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un " + Error(estado) + "\n"; 
+                        }                    
+                    if(estado == 11)
+                        if(!error.contains(String.valueOf(linea))) {
+                            Mostrar();
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un operando \n"; 
+                        }
+                    if(estado == 19)
+                        if(!error.contains(String.valueOf(linea))) {
+                            Mostrar();
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un parámetro \n"; 
+                        }
+                    
                     pilaprin.pop();
-                    error += Error(estado); //errores
+                    
+                    if(estado == 7 && (token.equals("function") || token.equals("procedure")))
+                        if(!error.contains(String.valueOf(linea))) {
+                            Mostrar();
+                            error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un" + pilaprin.pop() + "\n"; 
+                        }
+                    
                     Mostrar();                    
                 }
                 else
                     if(acciones[estado][col].equals("saltar")) 
-                    {
+                    {                                               
                         if(estados[estado].equals("LISTA_ARG")){
                             if(!error.contains(String.valueOf(linea)))
-                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un segundo argumento \n"; 
+                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un tipo de dato \n"; 
                         }
-                        else if(estados[estado].equals("MOD")){
+                        else if(estados[estado].equals("SIGARG")){
                             if(!error.contains(String.valueOf(linea)))
-                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba una función o procedimiento \n";
+                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba una , \n"; 
                         }
-                        else if(estados[estado].equals("TIPOS")){
-                            if(!error.contains(String.valueOf(linea)))
-                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un tipo de dato \n";                        
+                        else if(estados[estado].equals("SENT")){
+                            if(token.equals("(")) {
+                                if(!error.contains(String.valueOf(linea)))
+                                    error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un if o un while" + "\n";
+                            }                                                            
+                            else if(!error.contains(String.valueOf(linea)))
+                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un id" + "\n";
                         }
                         else if(estados[estado].equals("L") || estados[estado].equals("R") || estados[estado].equals("E") || estados[estado].equals("T") || estados[estado].equals("F")){
                             if(!error.contains(String.valueOf(linea)))
@@ -263,15 +299,7 @@ public class Compilador extends javax.swing.JFrame
                             } 
                             else if(!error.contains(String.valueOf(linea)))
                                     error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un operador" + "\n";                                                              
-                        }
-                        else if(estados[estado].equals("SENT")){
-                            if(token.equals("(")) {
-                                if(!error.contains(String.valueOf(linea)))
-                                    error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un if o un while" + "\n";
-                            }
-                            else if(!error.contains(String.valueOf(linea)))
-                                error += (++con) + ". Error sintáctico en la línea " + linea + ": esperaba un id" + "\n";
-                        }
+                        }                        
                         break;
                     }
                     else {
@@ -286,16 +314,19 @@ public class Compilador extends javax.swing.JFrame
                         Mostrar();
                     }
             }
-            else
-                tokensIguales(token, linea);            
-        }
+            else {
+                tokensIguales(token, linea); 
+                Mostrar();
+            }
+        }                
         if(pilaprin.peek().equals(token))
-            pilaprin.pop();
+            pilaprin.pop();               
     }
     
     public void Lexico()
     {        
         boolean ban = true;
+        int endcont = 0;
         Analisis c = new Analisis();
         File archivo = new File("Compilacion.yam"); // Representa el archivo Compilacion
         PrintWriter escribir;
@@ -371,11 +402,25 @@ public class Compilador extends javax.swing.JFrame
                         error += (++con) + ". Error léxico en la línea " + (c.linea + 1) + ": el lexema " + lexer.lexeme + " es irreconocible \n";                        
                         break;
                     case program, idProgram, idP, idF, read, print, then, id, num, litcar, litcad:
+                        if(token == Tokens.id)
+                            if(buscarNombre(lexer.lexeme) && buscarContexto(lexer.lexeme).equals("idF"))
+                                token = Tokens.idF;
+                            else
+                                if(buscarNombre(lexer.lexeme) && buscarContexto(lexer.lexeme).equals("idP"))
+                                    token = Tokens.idP;
+                                
                         resLexico += token + "\n";
                         Tabla(String.valueOf(lexer.lexeme), String.valueOf(token));
                         Sintactico(String.valueOf(token), (c.linea + 1));                        
                         break;
-                    default:
+                    case endprogram:
+                        endcont++;
+                        if(endcont > 1) {
+                            error += (++con) + ". Error sintáctico en la línea " + (c.linea + 1) + ": se encontró un endprogram adicional no permitido \n";
+                            token = null;
+                            break;
+                        }
+                    default:                        
                         resLexico += lexer.lexeme + "\n";
                         Tabla(String.valueOf(lexer.lexeme), String.valueOf(token));
                         Sintactico(String.valueOf(lexer.lexeme), (c.linea + 1));
@@ -388,6 +433,22 @@ public class Compilador extends javax.swing.JFrame
         } catch (IOException ex) {
             Logger.getLogger(Compilador.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public boolean buscarNombre(String lexema)
+    {
+        for(String[] comp : tokensTabla)       
+            if(comp[0].equals(lexema))
+                return true;
+        return false;
+    }
+    
+    public String buscarContexto(String lexema)
+    {
+        for(String[] comp: tokensTabla)       
+            if(comp[0].equals(lexema))
+                return String.valueOf(comp[1]);
+        return "";
     }
    
     @SuppressWarnings("unchecked")

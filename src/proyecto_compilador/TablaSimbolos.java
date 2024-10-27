@@ -89,6 +89,24 @@ public class TablaSimbolos
         }
         contexto = Contexto.PRINCIPAL;
     }
+    
+    public boolean buscarSimbolo(String lexema)
+    {
+        if(inicio != null)
+            for(String[] fila: inicio.dato)       
+                if(fila[0].equals(lexema))
+                    return true;
+        return false;
+    }
+    
+    public String buscarContexto(String lexema)
+    {
+        if(inicio != null)
+            for(String[] fila: inicio.dato)       
+                if(fila[0].equals(lexema))
+                    return String.valueOf(fila[1]);
+        return "";
+    }
 
     public void imprimirTabla() 
     {
